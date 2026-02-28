@@ -1,7 +1,7 @@
 # Weather App
 
 🔗 Live Demo:
-https://rohitpadal.github.io/Weather-App/
+https://rohit-padal.github.io/Weather-App/
 
 ---
 
