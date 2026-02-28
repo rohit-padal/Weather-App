@@ -219,8 +219,9 @@ name.addEventListener("input", function () {
     this.value = this.value.replace(/\s/g, "");
 });
 
-function load() {
+async function load() {
     let nameValue = name.value.trim();
+
     if (nameValue === "") {
         errorMsg.innerText = "Invalid city name";
         errorMsg.style.display = "block";
@@ -236,38 +237,37 @@ function load() {
     icon.style.display = "none";
     icon.src = "";
 
-    const apiKey = "8bf942ee101de8f3ccb45afbd0ecc0d6"; // Replace with your OpenWeather API key
+    const apiKey = "8bf942ee101de8f3ccb45afbd0ecc0d6";
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${nameValue}&appid=${apiKey}&units=metric`;
 
-    fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            loading.style.display = "none";
-            console.log(data)
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
 
-            if (data.cod === "404") {
-                errorMsg.innerText = "City not found. Please enter a valid city name.";
-                errorMsg.style.display = "block";
-                return;
-            }
+        loading.style.display = "none";
 
-            document.querySelector("#city").innerText = data.name;
-            document.querySelector("#temperature").innerText = data.main.temp + "°C";
-            document.querySelector("#condition").innerText = data.weather[0].description;
-
-            const iconCode = data.weather[0].icon;
-            icon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-            icon.style.display = "block";
-            container.style.display = "block";
-        })
-        .catch(err => {
-            loading.style.display = "none";
-            console.error("Error:", err);
-            errorMsg.innerText = "Something went wrong. Please try again.";
+        if (data.cod === "404") {
+            errorMsg.innerText = "City not found. Please enter a valid city name.";
             errorMsg.style.display = "block";
-        });
-}
+            return;
+        }
 
+        document.querySelector("#city").innerText = data.name;
+        document.querySelector("#temperature").innerText = data.main.temp + "°C";
+        document.querySelector("#condition").innerText = data.weather[0].description;
+
+        const iconCode = data.weather[0].icon;
+        icon.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+        icon.style.display = "block";
+        container.style.display = "block";
+
+    } catch (err) {
+        loading.style.display = "none";
+        console.error("Error:", err);
+        errorMsg.innerText = "Something went wrong. Please try again.";
+        errorMsg.style.display = "block";
+    }
+}
 name.addEventListener("keydown", (e) => {
     if (e.key === "Enter") load();
 });
@@ -292,3 +292,4 @@ themeToggle.addEventListener("click", () => {
 </body>
 
 </html>
+
