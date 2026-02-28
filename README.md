@@ -45,4 +45,4 @@ The application fetches weather data from an external API and updates the interf
 
 ## 📸 Screenshots
 
-screenshots/weatherApp.png
+![Preview](screenshots/weatherApp.png)
